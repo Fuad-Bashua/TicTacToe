@@ -32,10 +32,46 @@ function Gameboard() {
     console.log(boardWithCellValues);
 };
 
+const checkWinner = (token) => {
+    // Check rows
+    for (let i = 0; i < 3; i++) {
+        if (
+            board[i][0].getValue() === token &&
+            board[i][1].getValue() === token &&
+            board[i][2].getValue() === token
+        ) return true;
+    }
+
+    // Check columns
+    for (let j = 0; j < 3; j++) {
+        if (
+            board[0][j].getValue() === token &&
+            board[1][j].getValue() === token &&
+            board[2][j].getValue() === token
+        ) return true;
+    }
+
+    // Check diagonals
+    if (
+        board[0][0].getValue() === token &&
+        board[1][1].getValue() === token &&
+        board[2][2].getValue() === token
+    ) return true;
+
+    if (
+        board[0][2].getValue() === token &&
+        board[1][1].getValue() === token &&
+        board[2][0].getValue() === token
+    ) return true;
+
+    return false;
+};
+
     return { 
         getBoard, 
         dropToken, 
-        printBoard 
+        printBoard,
+        checkWinner
     };
    
 }
@@ -86,6 +122,13 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     const playRound = (column) => {
         console.log(`Dropping ${getActivePlayer().name}'s token into column ${column}...`);
         board.dropToken(column, getActivePlayer().token);
+
+        if (board.checkWinner(getActivePlayer().token)) {
+    console.log(`${getActivePlayer().name} wins!`);
+      return; // End the game
+   }
+
+
 
         switchPlayerTurn();
         printNewRound();
@@ -141,19 +184,6 @@ function ScreenController() {
 
 
 ScreenController();
-
-// const displayController = (function () {
-
-// })();
-
-// function player(name, marker) {
-//     let user = {
-//         name,
-//         marker,
-//     };
-
-//     return user;
-// }
 
 
 
