@@ -8,7 +8,7 @@ function Gameboard() {
     for(let i = 0; i < rows; i++) {
         board[i] = [];
         for(let j = 0; j < columns; j++) {
-            board[i].push[j];
+            board[i].push(Cell());
         }
     }
 
@@ -63,11 +63,11 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     const players = [
         {
             name: playerOneName,
-            token: 1
+            token: 'X'
         },
         {
             name: playerTwoName,
-            token: 2
+            token: 'O'
         }
     ];
 
@@ -95,24 +95,65 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
 
     return {
         playRound,
-        getActivePlayer
+        getActivePlayer,
+        getBoard: board.getBoard
     };
 }
 
-const game = GameController();
+function ScreenController() {
+    const game = GameController();
+    const playerTurnDiv = document.querySelector('.turn');
+    const boardDiv = document.querySelector('.board');
 
-const displayController = (function () {
+    const updateScreen = () => {
 
-})();
+        boardDiv.textContent = "";
 
-function player(name, marker) {
-    let user = {
-        name,
-        marker,
-    };
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
 
-    return user;
+        playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
+
+        board.forEach(row => {
+            row.forEach((cell, index) => {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add('cell');
+
+                cellButton.dataset.column = index
+                cellButton.textContent = cell.getValue();
+                boardDiv.appendChild(cellButton);
+            })
+        })
+    }
+
+    function clickHandlerBoard(e) {
+    const selectedColumn = e.target.dataset.column;
+
+    if(!selectedColumn) return;
+
+    game.playRound(selectedColumn);
+    updateScreen();
+    }
+    boardDiv.addEventListener('click', clickHandlerBoard);
+
+    updateScreen();
 }
+
+
+ScreenController();
+
+// const displayController = (function () {
+
+// })();
+
+// function player(name, marker) {
+//     let user = {
+//         name,
+//         marker,
+//     };
+
+//     return user;
+// }
 
 
 
