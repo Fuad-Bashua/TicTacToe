@@ -1,5 +1,5 @@
 // create function factories and then wrap it in an IIFE
-function Gameboard() {
+const gameboard = (function() {
     const board = []
     const columns = 3;
     const rows = 3;
@@ -74,7 +74,7 @@ const checkWinner = (token) => {
         checkWinner
     };
    
-}
+}) ();
 
 
 function Cell() {
@@ -93,8 +93,8 @@ function Cell() {
 }
 
 
-function GameController(playerOneName = "Player One", playerTwoName = "Player Two") {
-    const board = Gameboard()
+const GameController = (function (playerOneName = "Player One", playerTwoName = "Player Two") {
+    const board = gameboard;
 
     const players = [
         {
@@ -141,10 +141,10 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         getActivePlayer,
         getBoard: board.getBoard
     };
-}
+}) ();
 
 function ScreenController() {
-    const game = GameController();
+    const game = GameController;
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
 
